@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} {% endblock %}
+{% block content %}
+    {% if category %}
+        <h1>{{ category.name }}</h1>
+    {% else %}
+        <h1>All blogs</h1>
+    {% endif %}
+
+    <hr>
+    {% for blog in blogs %}
+        <a href="{% url 'blog_detail' blog.id %}"><h3>{{ blog.title }}</h3></a>
+        <img style="width: 400px" src="{{ blog.image.url }}">
+        <p>{{ blog.content | truncatewords:20 | safe }}</p>
+        <hr>
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}       {% endblock %}
+
+{% block content %}
+    <h1>{{ blog.title }}</h1>
+    <img style="width: 600px" src="{{ blog.image.url }}">
+    <p>Sana: {{ blog.created }} | Ko'rish: {{ blog.views }}</p>
+    {% for tag in blog.tags.all %}
+        <a href="{% url 'tag_filter' tag.slug %}">#{{ tag.name }}</a>
+    {% endfor %}
+<br>
+
+    {% if blog.user == request.user %}
+        <a class="btn btn-success" href="{% url 'blog_update' blog.slug %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'blog_delete' blog.slug %}">Delete</a>
+    {% endif %}
+    <hr>
+    {% for c in comments %}
+        <p>{{ c.content }}</p>
+        <p>User: {{ c.user.username }} | Sana: {{ c.created | date:"d.m.Y/H:i" }}</p>
+    {% endfor %}
+    <hr>
+    {% if user.username %}
+        <h1>Add comment</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.content }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add comment</button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <h1>Add comment</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.content }}
+                    </div>
+                    <a href="{% url 'login' %}" class="btn btn-primary">Add comment</a>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
